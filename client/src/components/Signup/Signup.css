@@ -5,10 +5,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    background-image: url("background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
 }
 .signup section{
     background-color: white;
-    box-shadow: 1px 1px 10px 1px #ccc5c5;
+    box-shadow: 1px 1px 10px 1px #aaa3a3;
     border-radius: 5px;
     width:48%;
     margin: 4rem 0;
