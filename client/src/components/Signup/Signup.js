@@ -1,53 +1,73 @@
 import React, { useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
 
+import "react-toastify/dist/ReactToastify.css";
 import "./Signup.css";
 
 const Signup = () => {
   const [user, setUser] = useState({
-    firstname: "",
-    lastname: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
 
-  let name,value;
-  const handleChange = (e) =>{
-    name = e.target.name
-    value = e.target.value
+  const validateEmail = (emailAdress) => {
+    let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (emailAdress.match(regexEmail)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-    setUser({...user,[name]:value})
-  }
+  let name, value;
+  const handleChange = (e) => {
+    name = e.target.name;
+    value = e.target.value;
+
+    setUser({ ...user, [name]: value });
+  };
 
   const register = async (e) => {
     e.preventDefault();
 
-    const { firstname, lastname, email, password } = user;
+    const { firstName, lastName, email, password } = user;
 
-    if (firstname && lastname && email && password) {
-      const response = await fetch("/signup", {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          firstname,
-          lastname,
-          email,
-          password,
-        }),
-      });
-
-      const isRegistered = await response.json()
-
-      if(isRegistered){
-        alert(`Registration Successful`)
-      }
-      else{
-        alert(`Oops! Something went wrong`)
-      }
-
+    if (!validateEmail(email)) {
+      toast.info("Invalid Email Format");
     } else {
-      alert(`Fields are not properly filled!`);
+      try {
+        if (firstName && lastName && email && password) {
+          const response = await fetch("/api/signup", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              firstName,
+              lastName,
+              email,
+              password,
+            }),
+          });
+
+          const isRegistered = await response.json();
+
+          console.log(isRegistered.message);
+
+          if (isRegistered.message === "Registration Successfull") {
+            toast.success("Registration Successfull!");
+          } else {
+            if (isRegistered.message === "Email already exists!")
+              toast.error("Email already exists!");
+          }
+        } else {
+          toast.dark("Fields are not properly filled!");
+        }
+      } catch (err) {
+        console.log(err.message);
+      }
     }
   };
 
@@ -72,18 +92,18 @@ const Signup = () => {
           <div className="name-field">
             <input
               type="text"
-              name="firstname"
+              name="firstName"
               id="firstname"
               placeholder="First name"
-              value={user.firstname}
+              value={user.firstName}
               onChange={handleChange}
             />
             <input
               type="text"
-              name="lastname"
+              name="lastName"
               id="lastname"
               placeholder="Last name"
-              value={user.lastname}
+              value={user.lastName}
               onChange={handleChange}
             />
           </div>
@@ -118,6 +138,17 @@ const Signup = () => {
           Policy and Terms of Service apply.
         </aside>
       </section>
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={true}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

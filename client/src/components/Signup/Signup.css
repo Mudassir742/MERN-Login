@@ -121,6 +121,10 @@
     background-color: #F67328;
 }
 
+.btn-section div button:hover{
+    box-shadow: 1px 1px 10px 1px #aaa3a3;
+}
+
 .btn-section a{
     text-decoration: none;
     letter-spacing: 1px;
