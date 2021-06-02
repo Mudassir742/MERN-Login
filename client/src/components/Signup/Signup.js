@@ -5,6 +5,8 @@ import "react-toastify/dist/ReactToastify.css";
 import "./Signup.css";
 
 const Signup = () => {
+
+  //storing the user detail for signUp.... 
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -12,6 +14,7 @@ const Signup = () => {
     password: "",
   });
 
+  //checking for valid email format.....
   const validateEmail = (emailAdress) => {
     let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (emailAdress.match(regexEmail)) {
@@ -21,6 +24,8 @@ const Signup = () => {
     }
   };
 
+
+  //get data from input fields....
   let name, value;
   const handleChange = (e) => {
     name = e.target.name;
@@ -29,6 +34,8 @@ const Signup = () => {
     setUser({ ...user, [name]: value });
   };
 
+
+  
   const register = async (e) => {
     e.preventDefault();
 
@@ -38,7 +45,11 @@ const Signup = () => {
       toast.info("Invalid Email Format");
     } else {
       try {
+
+        //if all the inputs are filled up...
         if (firstName && lastName && email && password) {
+
+          //posting data to server...
           const response = await fetch("/api/signup", {
             method: "POST",
             headers: {
@@ -52,6 +63,7 @@ const Signup = () => {
             }),
           });
 
+          //getting the registration response...
           const isRegistered = await response.json();
 
           console.log(isRegistered.message);
@@ -140,7 +152,7 @@ const Signup = () => {
       </section>
       <ToastContainer
         position="top-right"
-        autoClose={2000}
+        autoClose={4000}
         hideProgressBar={true}
         newestOnTop={false}
         closeOnClick
